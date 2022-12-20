@@ -73,10 +73,10 @@ tl.fromTo('.title', {opacity:0},{opacity:1})
 
 //Mouse Animation Color
 let mouseDown = false;
+let fingerDown = false;
 let rgb = [];
-window.addEventListener('mousedown', ()=>(mouseDown = true))
-window.addEventListener('mouseup', ()=>(mouseDown = false))
-
+window.addEventListener('mousemove', ()=>(mouseDown = true))
+window.addEventListener('touchstart', ()=>(fingerDown = true))
 window.addEventListener('mousemove', (e)=>{
     if(mouseDown){
         rgb = [
@@ -93,4 +93,23 @@ window.addEventListener('mousemove', (e)=>{
             b:newColor.b
         }) 
     }
+})
+window.addEventListener('touchstart', (e)=>{
+    window.addEventListener('touchmove',(e)=>{
+        if(fingerDown){
+            rgb = [
+                Math.round((e.touches[0].clientX/sizes.width) * 255),
+                Math.round((e.touches[0].clientY/sizes.height) * 255),
+                150,
+            ]
+            //Lets animate
+            let newColor = new THREE.Color(`rgb(${rgb.join(",")})`)
+
+            gsap.to(mesh.material.color,{
+                r: newColor.r, 
+                g: newColor.g, 
+                b:newColor.b
+            }) 
+        }
+    })  
 })
